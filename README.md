@@ -64,7 +64,7 @@ If version information is displayed, the installation was successful.
 1. Open Terminal (Mac) or PowerShell/Command Prompt (Windows)
 2. Clone the repository:
    ```
-   git clone [repository_url]
+   git clone https://github.com/Yeeoy/microservice-tourism-ecosystem-api.git
    cd microservice-tourism-ecosystem-api
    ```
 3. Build and start services:
