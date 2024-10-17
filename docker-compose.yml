@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  consul:
+    image: consul:1.15.0
+    ports:
+      - "8500:8500"
+    command: "agent -dev -client=0.0.0.0"
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/app/static
+    depends_on:
+      - local-transportation-service
+      - accommodation-service
+      - auth-service
+      - event-organizers-service
+      - information-center-service
+    networks:
+      - app-network
+
+  local-transportation-service:
+    build:
+      context: ./local_transportation_service
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=local_transportation_service.settings
+      - CONSUL_HOST=consul
+      - SERVICE_HOST=local-transportation-service
+      - SERVICE_PORT=8001
+    volumes:
+      - static_volume:/app/static
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn local_transportation_service.wsgi:application --bind 0.0.0.0:8001"
+    depends_on:
+      - consul
+    networks:
+      - app-network
+
+  accommodation-service:
+    build:
+      context: ./accommodation_service
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=accommodation_service.settings
+      - CONSUL_HOST=consul
+      - SERVICE_HOST=accommodation-service
+      - SERVICE_PORT=8002
+    volumes:
+      - static_volume:/app/static
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn accommodation_service.wsgi:application --bind 0.0.0.0:8002"
+    depends_on:
+      - consul
+    networks:
+      - app-network
+
+  auth-service:
+    build:
+      context: ./auth_service
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=auth_service.settings
+      - CONSUL_HOST=consul
+      - SERVICE_HOST=auth-service
+      - SERVICE_PORT=8003
+    volumes:
+      - static_volume:/app/static
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn auth_service.wsgi:application --bind 0.0.0.0:8003"
+    depends_on:
+      - consul
+    networks:
+      - app-network
+
+  event-organizers-service:
+    build:
+      context: ./event_organizers_service
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=event_organizers_service.settings
+      - CONSUL_HOST=consul
+      - SERVICE_HOST=event-organizers-service
+      - SERVICE_PORT=8004
+    volumes:
+      - static_volume:/app/static
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn event_organizers_service.wsgi:application --bind 0.0.0.0:8004"
+    depends_on:
+      - consul
+    networks:
+      - app-network
+
+  information-center-service:
+    build:
+      context: ./information_center_service
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=information_center_service.settings
+      - CONSUL_HOST=consul
+      - SERVICE_HOST=information-center-service
+      - SERVICE_PORT=8005
+    volumes:
+      - static_volume:/app/static
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn information_center_service.wsgi:application --bind 0.0.0.0:8005"
+    depends_on:
+      - consul
+    networks:
+      - app-network
+
+  restaurant-service:
+    build:
+      context: ./restaurant_service
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=restaurant_service.settings
+      - CONSUL_HOST=consul
+      - SERVICE_HOST=restaurant-service
+      - SERVICE_PORT=8006
+    volumes:
+      - static_volume:/app/static
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn restaurant_service.wsgi:application --bind 0.0.0.0:8006"
+    depends_on:
+      - consul
+    networks:
+      - app-network
+
+volumes:
+  static_volume:
+
+networks:
+  app-network:
+    driver: bridge
