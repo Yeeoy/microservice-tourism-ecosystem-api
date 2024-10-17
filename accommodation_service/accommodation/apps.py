@@ -6,5 +6,4 @@ class AccommodationConfig(AppConfig):
     name = 'accommodation'
     
     def ready(self):
-        pass
-        # register_service()
+        register_service()
