@@ -12,12 +12,9 @@ logger = logging.getLogger(__name__)
 
 class JWTAuthBackend(JWTAuthentication):
     def authenticate(self, request):
-        logger.debug("Starting authentication process")
-        # logger.debug(f"All request headers: {request.headers}")
         try:
             header = self.get_header(request)
             if header is None:
-                logger.debug("No Authorization header found")
                 return None
 
             raw_token = self.get_raw_token(header)
@@ -33,7 +30,6 @@ class JWTAuthBackend(JWTAuthentication):
 
             # 从Token中获取用户信息
             user = self.get_user(validated_token)
-            logger.debug(f"User authenticated: {user}")
             return (user, validated_token)
         except Exception as e:
             logger.error(f"Authentication failed: {str(e)}")
@@ -42,9 +38,7 @@ class JWTAuthBackend(JWTAuthentication):
     def get_user(self, validated_token):
         try:
             user_id = validated_token['user_id']
-            logger.debug(f"Attempting to get user info for user_id: {user_id}")
             
-            # 确保这个 URL 路径与您的认证服务 API 匹配
             url = f"{settings.USER_SERVICE_URL}/api/customUser/me/"
             logger.debug(f"Requesting user info from: {url}")
             
@@ -56,13 +50,12 @@ class JWTAuthBackend(JWTAuthentication):
             logger.debug(f"Response content: {response.text}")
             
             if response.status_code == 200:
-                user_data = response.json()['data']  # 注意这里的变化
-                # 创建或更新本地用户
+                user_data = response.json()['data']
                 user, created = User.objects.update_or_create(
                     id=user_data['id'],
                     defaults={
                         'email': user_data['email'],
-                        'username': user_data['name'],  # 使用 'name' 而不是 'username'
+                        'username': user_data['name'],
                         'is_staff': user_data['is_staff'],
                         'is_active': user_data['is_active'],
                     }

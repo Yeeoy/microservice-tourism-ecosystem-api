@@ -11,12 +11,10 @@ logger = logging.getLogger(__name__)
 
 class JWTAuthBackend(JWTAuthentication):
     def authenticate(self, request):
-        logger.debug("Starting authentication process")
         # logger.debug(f"All request headers: {request.headers}")
         try:
             header = self.get_header(request)
             if header is None:
-                logger.debug("No Authorization header found")
                 return None
 
             raw_token = self.get_raw_token(header)

@@ -36,7 +36,7 @@ class TableReservationViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_staff or user.is_superuser:
             return TableReservation.objects.all()
-        return TableReservation.objects.filter(user_id=user)
+        return TableReservation.objects.filter(user_id=user.id)
 
 
 @extend_schema(tags=['RC - Menu'])
@@ -82,7 +82,7 @@ class OnlineOrderViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_staff or user.is_superuser:
             return OnlineOrder.objects.all()
-        return OnlineOrder.objects.filter(user_id=user)
+        return OnlineOrder.objects.filter(user_id=user.id)
 
     @action(detail=False, methods=['post'], url_path='calculate-price', permission_classes=[AllowAny],
             serializer_class=CalculateOrderSerializer)

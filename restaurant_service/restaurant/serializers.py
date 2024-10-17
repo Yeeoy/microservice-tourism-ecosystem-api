@@ -53,7 +53,7 @@ class OnlineOrderSerializer(serializers.ModelSerializer):
 
         # 创建订单对象
         order = OnlineOrder.objects.create(
-            user=validated_data.get('user'),
+            user_id=validated_data.get('user_id'),
             restaurant=validated_data.get('restaurant'),
             order_date=validated_data.get('order_date'),
             order_time=validated_data.get('order_time'),

@@ -33,7 +33,7 @@ class VenueBookingViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Automatically set the current logged-in user as user_id
         print(self.request.user)
-        serializer.save(user_id=self.request.user)
+        serializer.save(user_id=self.request.user.id)
 
     def get_queryset(self):
         user = self.request.user
@@ -41,7 +41,7 @@ class VenueBookingViewSet(viewsets.ModelViewSet):
         if user.is_staff or user.is_superuser:
             return VenueBooking.objects.all()
         # If the user is a regular user, return only the bookings related to the current user
-        return VenueBooking.objects.filter(user_id=user)
+        return VenueBooking.objects.filter(user_id=user.id)
 
     @action(detail=False,
             methods=['post'],

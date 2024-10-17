@@ -22,6 +22,7 @@ services:
       - auth-service
       - event-organizers-service
       - information-center-service
+      - restaurant-service
     networks:
       - app-network
 
@@ -36,6 +37,8 @@ services:
       - SERVICE_PORT=8001
     volumes:
       - static_volume:/app/static
+      - ./local_transportation_service:/app
+      - ./local_transportation_service/db.sqlite3:/app/db.sqlite3
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn local_transportation_service.wsgi:application --bind 0.0.0.0:8001"
     depends_on:
       - consul
@@ -53,6 +56,8 @@ services:
       - SERVICE_PORT=8002
     volumes:
       - static_volume:/app/static
+      - ./accommodation_service:/app
+      - ./accommodation_service/db.sqlite3:/app/db.sqlite3
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn accommodation_service.wsgi:application --bind 0.0.0.0:8002"
     depends_on:
       - consul
@@ -70,6 +75,8 @@ services:
       - SERVICE_PORT=8003
     volumes:
       - static_volume:/app/static
+      - ./auth_service:/app
+      - ./auth_service/db.sqlite3:/app/db.sqlite3
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn auth_service.wsgi:application --bind 0.0.0.0:8003"
     depends_on:
       - consul
@@ -87,6 +94,8 @@ services:
       - SERVICE_PORT=8004
     volumes:
       - static_volume:/app/static
+      - ./event_organizers_service:/app
+      - ./event_organizers_service/db.sqlite3:/app/db.sqlite3
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn event_organizers_service.wsgi:application --bind 0.0.0.0:8004"
     depends_on:
       - consul
@@ -104,6 +113,8 @@ services:
       - SERVICE_PORT=8005
     volumes:
       - static_volume:/app/static
+      - ./information_center_service:/app
+      - ./information_center_service/db.sqlite3:/app/db.sqlite3
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn information_center_service.wsgi:application --bind 0.0.0.0:8005"
     depends_on:
       - consul
@@ -121,6 +132,8 @@ services:
       - SERVICE_PORT=8006
     volumes:
       - static_volume:/app/static
+      - ./restaurant_service:/app
+      - ./restaurant_service/db.sqlite3:/app/db.sqlite3
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn restaurant_service.wsgi:application --bind 0.0.0.0:8006"
     depends_on:
       - consul

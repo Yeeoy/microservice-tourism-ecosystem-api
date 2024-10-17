@@ -145,7 +145,7 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
-USER_SERVICE_URL = 'http://localhost:8000'
+USER_SERVICE_URL = os.environ.get('USER_SERVICE_URL', 'http://auth-service:8003')
 
 # 添加认证后端
 AUTHENTICATION_BACKENDS = [

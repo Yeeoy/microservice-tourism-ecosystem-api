@@ -10,6 +10,8 @@ from .models import Destination, Tour, EventNotification, TourBooking
 from .serializers import DestinationSerializer, TourSerializer, \
     EventNotificationSerializer, TourBookingSerializer
 from .permissions import IsAdminOrReadOnly
+from rest_framework.exceptions import NotFound
+from django.core.exceptions import ValidationError
 
 
 @extend_schema(tags=['TIC - Destination'])
@@ -48,16 +50,13 @@ class TourBookingViewSet(viewsets.ModelViewSet):
     activity_name = "Tour Booking"
 
     def perform_create(self, serializer):
-        # Automatically set the current logged-in user as user_id
-        serializer.save(user_id=self.request.user)
+        serializer.save(user_id=self.request.user.id)
 
     def get_queryset(self):
         user = self.request.user
-        # If the user is an admin, return all bookings
         if user.is_staff or user.is_superuser:
             return TourBooking.objects.all()
-        # If the user is a regular user, return only the bookings related to the current user
-        return TourBooking.objects.filter(user_id=user)
+        return TourBooking.objects.filter(user_id=user.id)
 
 @extend_schema(tags=['TIC - Health'])
 class HealthView(APIView):
