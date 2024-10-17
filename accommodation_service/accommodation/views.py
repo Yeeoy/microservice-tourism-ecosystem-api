@@ -25,16 +25,7 @@ class AccommodationViewSet(viewsets.ModelViewSet):
     serializer_class = AccommodationSerializer
     authentication_classes = [JWTAuthBackend]
     permission_classes = [IsAuthenticatedOrReadOnly]
-
-    @extend_schema(
-        description='List all accommodations',
-        responses={200: AccommodationSerializer(many=True)}
-    )
-    def list(self, request, *args, **kwargs):
-        logger.debug(f"Request user: {request.user}")
-        logger.debug(f"Request auth: {request.auth}")
-        logger.debug(f"Is authenticated: {request.user.is_authenticated}")
-        return super().list(request, *args, **kwargs)
+    activity_name = "Accommodation"
 
 @extend_schema(tags=["AM - Room Type"])
 class RoomTypeViewSet(viewsets.ModelViewSet):

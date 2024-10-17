@@ -7,7 +7,7 @@ from drf_spectacular.utils import extend_schema
 # 导入 PM4PY 相关库
 # from pm4py.objects.conversion.log import converter as log_converter
 # from pm4py.objects.log.exporter.xes import exporter as xes_exporter
-from rest_framework import generics, authentication, permissions, status
+from rest_framework import generics, authentication, permissions, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.pagination import PageNumberPagination
@@ -86,11 +86,10 @@ class EventLogPagination(PageNumberPagination):
     max_page_size = 100  # 限制每页最多 100 条记录
 
 
-@extend_schema(tags=['Event Log'])
-class EventLogListView(generics.ListAPIView):
+class EventLogViewSet(viewsets.ModelViewSet):
     queryset = EventLog.objects.all().order_by('-start_time')
     serializer_class = EventLogSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = EventLogPagination
 
 
@@ -101,7 +100,7 @@ class GenerateAndDownloadCSV(APIView):
     def get(self, request, *args, **kwargs):
         try:
             # 第一步：从数据库中检索所有用户事件日志数据
-            events = EventLog.objects.all().values('case_id', 'activity', 'start_time', 'end_time', 'user_id', 'user',
+            events = EventLog.objects.all().values('case_id', 'activity', 'start_time', 'end_time', 'user_id',
                                                    'user_name')
             df = pd.DataFrame(list(events))
 
@@ -110,7 +109,7 @@ class GenerateAndDownloadCSV(APIView):
                 return JsonResponse({"message": "No events found."}, status=404)
 
             # 修改列名为大写或你需要的格式
-            df.columns = ['Case_id', 'Activity', 'Start_time', 'End_time', 'User_id', 'User', 'User_name']
+            df.columns = ['Case_id', 'Activity', 'Start_time', 'End_time', 'User_id', 'User_name']
 
             # 格式化日期列，格式为 "日.月.年 时:分"
             df['Start_time'] = pd.to_datetime(df['Start_time']).dt.strftime('%-d.%-m.%y %H:%M')

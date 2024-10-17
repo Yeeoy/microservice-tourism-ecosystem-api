@@ -68,7 +68,7 @@ class AuthTokenSerializer(serializers.Serializer):
 class EventLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventLog
-        fields = ['case_id', 'activity', 'start_time', 'end_time', 'user_id', 'user', 'user_name']
+        fields = ['id', 'case_id', 'activity', 'start_time', 'end_time', 'user_id', 'user_id', 'user_name']
 
 # 添加自定义的 TokenObtainPairSerializer
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):

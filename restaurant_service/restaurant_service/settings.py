@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "restaurant.RequestLoggingMiddleware.RequestLoggingMiddleware",
 ]
 
 ROOT_URLCONF = 'restaurant_service.urls'
@@ -147,6 +148,7 @@ SIMPLE_JWT = {
 }
 
 USER_SERVICE_URL = os.environ.get('USER_SERVICE_URL', 'http://auth-service:8003')
+LOGS_API_URL = os.environ.get('LOGS_API_URL', 'http://auth-service:8003')
 
 # 添加认证后端
 AUTHENTICATION_BACKENDS = [
