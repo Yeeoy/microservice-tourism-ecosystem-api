@@ -3,8 +3,13 @@ import consul
 import os
 import requests
 from requests.exceptions import RequestException
+from django.conf import settings
 
 def register_service():
+    if not settings.CONSUL_ENABLED:
+        print("Skipping Consul registration as it is disabled.")
+        return
+
     max_retries = 5
     retry_delay = 5
 

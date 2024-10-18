@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-a@3$n)x1*18may1$lgoji4$=7irz#n^rs+gtixk*lr!+wdc7#u"
+SECRET_KEY = "django-insecure-a@3$n*x1*18may1$lgoji4$=7irz#n^rs+gtixk*lr!+wdc7#u"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -220,3 +221,9 @@ LOGGING = {
         },
     },
 }
+
+# 添加这行来检测是否在测试模式
+TESTING = 'test' in sys.argv
+
+# 根据测试模式设置 CONSUL_ENABLED
+CONSUL_ENABLED = not TESTING

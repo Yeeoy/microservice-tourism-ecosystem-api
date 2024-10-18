@@ -49,8 +49,8 @@ class JWTAuthBackend(JWTAuthentication):
                 url,
                 headers={'Authorization': f"Bearer {validated_token}"}
             )
-            logger.debug(f"Response status: {response.status_code}")
-            logger.debug(f"Response content: {response.text}")
+            # logger.debug(f"Response status: {response.status_code}")
+            # logger.debug(f"Response content: {response.text}")
             
             if response.status_code == 200:
                 user_data = response.json()['data']  # 注意这里的变化

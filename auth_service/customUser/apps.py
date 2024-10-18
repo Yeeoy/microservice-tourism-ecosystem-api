@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.conf import settings
 
 
 class CustomuserConfig(AppConfig):
@@ -6,5 +7,9 @@ class CustomuserConfig(AppConfig):
     name = 'customUser'
 
     def ready(self):
-        from .utils import register_service
-        register_service()
+        if not settings.TESTING: 
+            from .utils import register_service
+            if settings.CONSUL_ENABLED:
+                register_service()
+            else:
+                print("Consul service registration is disabled.")

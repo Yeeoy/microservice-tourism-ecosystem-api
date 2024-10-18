@@ -36,7 +36,7 @@ class RequestLoggingMiddleware:
 
                 # 获取 activity_name
                 activity_name = view_class.activity_name  # 使用视图中的 activity_name
-                logger.debug(f"Detected activity_name: {activity_name}")
+                # logger.debug(f"Detected activity_name: {activity_name}")
 
                 # 附加请求操作的后缀（如 List, Retrieve, Create）
                 activity = f"{activity_name} {action_name.capitalize()}" if action_name else activity_name
@@ -75,7 +75,8 @@ class RequestLoggingMiddleware:
                 self.update_log_event_to_api(request.event_log)
                 logger.debug(f"Updated Event Log: {request.event_log}")
             else:
-                logger.debug("No event_log or log ID found in request. Skipping process_response logging.")
+                # logger.debug("No event_log or log ID found in request. Skipping process_response logging.")
+                pass
         except Exception as e:
             logger.error(f"Error in process_response: {str(e)}")
         finally:
@@ -92,10 +93,10 @@ class RequestLoggingMiddleware:
                 user, validated_token = auth_result
                 return user
             else:
-                logger.debug("No valid token found or user not authenticated, treating as anonymous")
+                # logger.debug("No valid token found or user not authenticated, treating as anonymous")
                 return None
         except (InvalidToken, AuthenticationFailed) as e:
-            logger.error(f"Failed to authenticate user, treating as anonymous: {str(e)}")
+            # logger.error(f"Failed to authenticate user, treating as anonymous: {str(e)}")
             return None
 
     def get_view_class_and_action(self, request):
@@ -133,8 +134,8 @@ class RequestLoggingMiddleware:
                 elif request.method.lower() == 'delete':
                     action_name = 'destroy'
 
-            logger.debug(f"Resolved view_class: {view_class}")
-            logger.debug(f"Determined action_name: {action_name}")
+            # logger.debug(f"Resolved view_class: {view_class}")
+            # logger.debug(f"Determined action_name: {action_name}")
 
             return view_class, action_name
         except Exception as e:
@@ -170,7 +171,7 @@ class RequestLoggingMiddleware:
                 logger.error(f"Failed to record log to API: {response.status_code} {response.text}")
                 return None
         except Exception as e:
-            logger.error(f"Error sending log to API: {str(e)}")
+            # logger.error(f"Error sending log to API: {str(e)}")
             return None
 
     def update_log_event_to_api(self, event_data):
